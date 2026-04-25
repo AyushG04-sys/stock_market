@@ -1,6 +1,6 @@
 # Apexify - Stock Market Simulator
 
-A web-based stock market simulation platform built with Flask and vanilla JavaScript. Apexify allows users to practice trading stocks with virtual money in a realistic market environment.
+A web-based stock market simulation platform built with Flask and vanilla JavaScript. Apexify allows users to practice trading stocks with virtual money in a realistic market environment featuring live price updates, interactive charts, and market news aggregation.
 
 ![Apexify](https://img.shields.io/badge/Apexify-Stock%20Simulator-a855f7?style=for-the-badge)
 ![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask)
@@ -9,12 +9,15 @@ A web-based stock market simulation platform built with Flask and vanilla JavaSc
 ## Features
 
 - **User Authentication**: Sign up and login functionality with session management via localStorage
-- **Virtual Wallet**: Start with ₹10,000 virtual cash, add or withdraw funds
-- **Real-time Stock Trading**: Buy and sell stocks from 10 major Indian companies
+- **Virtual Wallet**: Start with virtual cash, add or withdraw funds as needed
+- **Real-time Stock Trading**: Buy and sell stocks from 10 major Indian companies with live price updates
+- **Live Volatility Algorithm**: Simulated market movements with realistic price fluctuations every 2 seconds
 - **Interactive Dashboard**:
-  - Live portfolio tracking
+  - Live portfolio tracking with P&L calculations
   - Trade history with timestamps
-  - Visual stock performance charts using Chart.js
+  - Visual stock performance charts using ApexCharts (candlestick charts)
+  - Trending stocks widget
+- **Multi-Source News Aggregator**: Live market news from Economic Times, Moneycontrol, and Times of India
 - **Dark/Light Mode**: Toggle between themes with persistent preferences
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 
@@ -25,21 +28,20 @@ A web-based stock market simulation platform built with Flask and vanilla JavaSc
 | Backend | Python Flask |
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
 | Database | JSON file (users.json) |
-| Charts | Chart.js |
+| Charts | ApexCharts |
 | Icons | Font Awesome |
 
 ## Project Structure
 
 ```
-hackathon/
-├── app.py              # Flask backend server
-├── stockmarket.py      # Console-based stock market (legacy)
-├── users.json          # User data storage
+stock_market/
+├── app.py              # Flask backend server with news aggregation
+├── users.json          # User data storage (balances, holdings, history)
 ├── static/
-│   ├── styles.css      # Application styles
-│   └── script.js       # Frontend JavaScript
+│   ├── styles.css      # Application styles (dark/light theme)
+│   └── script.js       # Frontend JavaScript with volatility algorithm
 ├── templates/
-│   ├── index.html      # Dashboard page
+│   ├── index.html      # Main dashboard with all views
 │   ├── login.html      # Login page
 │   └── signup.html     # Signup page
 └── README.md
@@ -50,7 +52,7 @@ hackathon/
 1. Clone the repository:
    ```bash
    git clone https://github.com/AyushG04-sys/stockmarket.git
-   cd hackathon
+   cd stock_market
    ```
 
 2. Install dependencies:
@@ -70,29 +72,34 @@ hackathon/
 ### Signing Up
 1. Navigate to the signup page
 2. Enter a unique username and password
-3. Click "Sign Up" - you'll receive ₹10,000 virtual cash
+3. Click "Sign Up" - account created with zero balance (add funds to start trading)
 
 ### Trading Stocks
-1. **View Market**: Dashboard shows live prices for 10 Indian stocks:
-   - TCS, RELIANCE, INFY, HDFC, WIPRO, ICICIBANK, SBIN, BHARTIARTL, ITC, LT
-
+1. **View Market**: Navigate to "Companies" tab to see live prices for 10 Indian stocks
 2. **Buy Stocks**:
-   - Select a company from the dropdown
-   - Enter quantity
-   - Click Buy (requires sufficient balance)
-
+   - Enter quantity for any company
+   - Click "Buy" (requires sufficient balance)
 3. **Sell Stocks**:
-   - Select a company you own
-   - Enter quantity to sell
-   - Click Sell
+   - Enter quantity to sell for stocks you own
+   - Click "Sell"
+4. **View Charts**: Click "Chart" button for candlestick visualization
 
-4. **Manage Wallet**:
-   - Add funds: Enter amount and click "+ Add"
-   - Withdraw: Enter amount and click "- Withdraw"
+### Managing Wallet
+- **Add Funds**: Enter amount and click "+ Add" on the dashboard
+- **Withdraw**: Enter amount and click "- Withdraw"
 
-### Viewing History
-- All transactions (BUY, SELL, DEPOSIT, WITHDRAW) are logged with timestamps
-- Accessible from the Trade History tab
+### Viewing Portfolio & P&L
+- Navigate to "Profit & Loss" tab to see:
+  - Net Worth (cash + holdings value)
+  - Total Cash Deposited
+  - Total P&L (profit/loss from trading)
+  - Live Holdings with current market values
+
+### Market News
+- Navigate to "Market News" tab for live aggregated news from:
+  - Economic Times
+  - Moneycontrol
+  - Times of India
 
 ## API Endpoints
 
@@ -105,26 +112,44 @@ hackathon/
 | `/api/login` | POST | Authenticate user |
 | `/api/user/<username>` | GET | Fetch user data |
 | `/api/market` | GET | Get live market data |
+| `/api/news` | GET | Fetch aggregated market news |
 | `/api/wallet` | POST | Add/withdraw funds |
 | `/api/buy` | POST | Buy stocks |
 | `/api/sell` | POST | Sell stocks |
 
 ## Market Data
 
-Initial stock prices and availability:
+Available stocks:
 
-| Company | Price (₹) | Available Stocks |
-|---------|-----------|------------------|
-| TCS | 3,500 | 1,000 |
-| RELIANCE | 2,500 | 1,500 |
-| INFY | 1,400 | 2,000 |
-| HDFC | 1,600 | 800 |
-| WIPRO | 450 | 3,000 |
-| ICICIBANK | 1,050 | 1,200 |
-| SBIN | 750 | 2,500 |
-| BHARTIARTL | 1,150 | 900 |
-| ITC | 420 | 4,000 |
-| LT | 3,600 | 500 |
+| Company | Base Price (₹) |
+|---------|----------------|
+| TCS | 3,500 |
+| RELIANCE | 2,500 |
+| INFY | 1,400 |
+| HDFC | 1,600 |
+| WIPRO | 450 |
+| ICICIBANK | 1,050 |
+| SBIN | 750 |
+| BHARTIARTL | 1,150 |
+| ITC | 420 |
+| LT | 3,600 |
+
+## Key Features Explained
+
+### Volatility Algorithm
+- Stock prices update every 2 seconds with simulated market movements
+- Each stock has a base price and current price that fluctuates based on random volatility
+- Candlestick charts update in real-time showing Open, High, Low, Close (OHLC) data
+
+### P&L Calculation
+- **Net Worth** = Available Cash + Current Portfolio Value
+- **Total P&L** = Net Worth - Net Deposits (deposits minus withdrawals)
+- Holdings are valued at current market prices
+
+### News Aggregation
+- Fetches RSS feeds from multiple financial news sources
+- Displays top 5 stories from each source
+- Parses XML feeds server-side and returns JSON to frontend
 
 ## Screenshots
 
@@ -134,17 +159,18 @@ The main trading interface with portfolio overview, cash balance, and stock char
 ### Features
 - **Dark Mode**: Default theme with purple accents
 - **Light Mode**: Alternative theme toggle
-- **Trade History**: Complete log of all transactions
-- **Stock Charts**: Interactive price visualization
+- **Trade History**: Complete log of all transactions (BUY, SELL, DEPOSIT, WITHDRAW)
+- **Candlestick Charts**: Interactive OHLC price visualization via ApexCharts
 
 ## Future Enhancements
 
-- [ ] Real-time stock price updates via external API
-- [ ] Portfolio value tracking with profit/loss calculation
-- [ ] Advanced charting with technical indicators
-- [ ] Multi-user support with proper authentication
+- [ ] Real-time stock price updates from external market API (NSE/BSE)
+- [ ] Portfolio value tracking with intraday P&L graphs
+- [ ] Advanced charting with technical indicators (RSI, MACD, Moving Averages)
 - [ ] Leaderboard for top traders
 - [ ] Export trade history to CSV/PDF
+- [ ] Email notifications for price alerts
+- [ ] Options/Futures trading simulation
 
 ## License
 
@@ -156,4 +182,4 @@ This project is open source and available for educational purposes.
 
 ---
 
-Built with passion for the hackathon community. Happy Trading! 📈
+Built with passion for the trading community. Happy Trading! 📈
