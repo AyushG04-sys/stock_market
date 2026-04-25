@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apexify Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        .hidden { display: none !important; } 
+        .trade-input { width: 60px; padding: 5px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px;}
+        .buy-btn-sm { background: #4ade80; color: #111; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-weight: bold;}
+        .sell-btn-sm { background: #f87171; color: #111; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-weight: bold;}
+        .info-card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i class="fas fa-chart-line"></i><span>Apexify</span></div>
+            </div>
+            <ul class="nav-links" id="sidebar-menu">
+                <li class="active" data-view="view-dashboard"><a href="#"><i class="fas fa-th-large"></i><span>Dashboard</span></a></li>
+                <li data-view="view-companies"><a href="#"><i class="fas fa-building"></i><span>Companies</span></a></li>
+                <li data-view="view-pnl"><a href="#"><i class="fas fa-chart-pie"></i><span>Profit & Loss</span></a></li>
+                <li data-view="view-news"><a href="#"><i class="fas fa-newspaper"></i><span>Market News</span></a></li>
+                <li data-view="view-newbie"><a href="#"><i class="fas fa-graduation-cap"></i><span>Newbie's Here</span></a></li>
+                <li data-view="view-userinfo"><a href="#"><i class="fas fa-user"></i><span>User Info</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="theme-switch">
+                    <span><i class="fas fa-moon"></i> Dark Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Dashboard</h1>
+                <div class="top-bar-right">
+                    <span id="user-greeting" style="font-weight: bold;"></span>
+                </div>
+            </header>
+
+            <div id="view-dashboard">
+                <section class="metric-cards-container">
+                    <div class="card metric-card">
+                        <div class="card-icon income-icon"><i class="fas fa-wallet"></i></div>
+                        <h3>Available Cash</h3>
+                        <p class="big-number" id="balance-display">₹0.00</p>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="number" id="wallet-amount" placeholder="Amount" class="trade-input" style="width: 80px;">
+                            <button id="add-funds-btn" class="buy-btn-sm">+ Add</button>
+                            <button id="withdraw-funds-btn" class="sell-btn-sm">- Withdraw</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="charts-section">
+                    <div class="card chart-card analytics-chart">
+                        <div class="chart-header">
+                            <h3>Live Stock Performance</h3>
+                            <select class="chart-filter" id="company-selector"></select>
+                        </div>
+                        <div id="dashboard-chart" style="height: 300px;"></div>
+                    </div>
+
+                    <div class="card chart-card trending-stocks">
+                        <div class="chart-header">
+                            <h3>Trending Stocks</h3>
+                            <i class="fas fa-fire" style="color: #f97316;"></i>
+                        </div>
+                        <ul class="trending-list" id="trending-list-body"></ul>
+                    </div>
+                </section>
+
+                <section class="transaction-history">
+                    <div class="card table-card">
+                        <div class="table-header"><h3>Trade History</h3></div>
+                        <table class="history-table">
+                            <thead><tr><th>Asset</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                            <tbody id="transaction-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <div id="view-companies" class="hidden">
+                <div class="card chart-card" style="margin-bottom: 20px;">
+                    <div class="chart-header">
+                        <h3 id="candlestick-title">TCS - Live Market Data</h3>
+                    </div>
+                    <div id="candlestick-chart" style="height: 350px;"></div> 
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-header"><h3>Live Market (10 Companies)</h3></div>
+                    <table class="history-table">
+                        <thead>
+                            <tr><th>Company Name</th><th>Live Price</th><th>24h Change</th><th>Candle Change (%)</th><th>Available</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="market-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-pnl" class="hidden">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-chart-pie"></i> Live P&L Statement</h2>
+                <div class="metric-cards-container">
+                    <div class="card metric-card"><h3>Net Worth</h3><p class="big-number" id="pnl-networth">₹0.00</p></div>
+                    <div class="card metric-card"><h3>Net Cash Deposited</h3><p class="big-number" id="pnl-invested">₹0.00</p></div>
+                    <div class="card metric-card"><h3>Total P&L</h3><p class="big-number" id="pnl-total" style="color: var(--text-secondary);">₹0.00</p></div>
+                </div>
+                <div class="card table-card" style="margin-top: 20px;">
+                    <div class="table-header"><h3>Live Holdings Value</h3></div>
+                    <table class="history-table">
+                        <thead><tr><th>Asset</th><th>Qty Owned</th><th>Live Market Price</th><th>Current Value</th></tr></thead>
+                        <tbody id="pnl-holdings-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-news" class="hidden">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-newspaper"></i> Top Market Stories</h2>
+                <div id="news-container" style="display: flex; flex-direction: column; gap: 15px;"></div>
+            </div>
+
+            <div id="view-newbie" class="hidden newbie-section">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-graduation-cap"></i> Welcome to the Market Academy</h2>
+                <div class="card info-card">
+                    <h3>1. The Absolute Basics</h3>
+                    <p><strong>What is a stock?</strong> Buying a stock means buying a tiny piece of ownership in a real company.</p>
+                    <p><strong>What is a portfolio?</strong> The collection of all the different stocks and cash you currently own.</p>
+                </div>
+                <div class="card info-card">
+                    <h3>2. The Golden Rules of Trading</h3>
+                    <ul>
+                        <li><strong>Buy Low, Sell High:</strong> Purchase stocks when they dip, and sell when they are overvalued.</li>
+                        <li><strong>Don't Panic Sell:</strong> The market goes up and down every day. Seeing red is normal.</li>
+                        <li><strong>Diversify:</strong> Don't put all your money into one single company. Spread your risk.</li>
+                        <li><strong>Do Your Research:</strong> Check the "Market News" tab to see why a stock is moving.</li>
+                    </ul>
+                </div>
+                <div class="card info-card">
+                    <h3>3. Common Market Jargon</h3>
+                    <ul>
+                        <li><strong style="color: #4ade80;">Bull Market:</strong> When the overall stock market is steadily rising.</li>
+                        <li><strong style="color: #f87171;">Bear Market:</strong> When the overall market is falling and investors are scared.</li>
+                        <li><strong>Volatility:</strong> How wildly a stock's price jumps up and down.</li>
+                        <li><strong>Candlestick:</strong> The red and green blocks on your charts showing Open, High, Low, and Close prices.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="view-userinfo" class="hidden">
+                <div class="info-card">
+                    <h2><i class="fas fa-user-circle"></i> Portfolio Summary</h2>
+                    <hr style="border-color: var(--border-color); margin: 15px 0;">
+                    <h3 style="color: var(--text-secondary); margin-bottom: 10px;">Wallet Balance: <span id="info-balance" style="color: var(--text-color);">₹0.00</span></h3>
+                    <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Total Stocks Owned: <span id="info-total-stocks" style="color: var(--text-color);">0</span></h3>
+                    <h3 style="margin-bottom: 15px;">Your Holdings Breakdown:</h3>
+                    <table class="history-table">
+                        <thead><tr><th>Company Ticker</th><th>Quantity Owned</th></tr></thead>
+                        <tbody id="holdings-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

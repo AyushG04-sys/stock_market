@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Apexify</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo"><i class="fas fa-chart-line"></i><span>Apexify</span></div>
+            <h2>Create Account</h2>
+            <p>Start your trading journey with ₹0.00</p>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="new-username">Choose a Username</label>
+                    <input type="text" id="new-username" required>
+                </div>
+                <div class="input-group">
+                    <label for="new-password">Password</label>
+                    <input type="password" id="new-password" required>
+                </div>
+                <button type="submit" class="login-btn">Sign Up</button>
+            </form>
+            <p class="signup-text">Already have an account? <a href="/">Log in here</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const username = document.getElementById('new-username').value;
+            
+            fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    alert(data.error);
+                } else {
+                    alert("Account created! Please log in.");
+                    window.location.href = "/";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

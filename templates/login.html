@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Apexify Stock Market Simulator</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Apexify</span>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Please log in to access your dashboard</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" placeholder="demo@apexify.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                <button type="submit" class="login-btn">Log In</button>
+            </form>
+           <p class="signup-text">Don't have an account? <a href="/signup">Sign up for free</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const username = document.getElementById('username').value;
+            
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    alert(data.error);
+                } else {
+                    // Save the username to the browser's local storage so the dashboard knows who is logged in!
+                    localStorage.setItem('currentUser', username);
+                    window.location.href = "/dashboard";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

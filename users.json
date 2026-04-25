@@ -1,0 +1,118 @@
+{
+    "tanish": {
+        "cash_balance": 1970.347172796568,
+        "portfolio_value": 0.0,
+        "holdings": {
+            "ICICIBANK": 3
+        },
+        "history": [
+            {
+                "name": "ICICIBANK",
+                "type": "BUY",
+                "amount": 3179.652827203432,
+                "date": "Apr 25, 22:17",
+                "status": "success"
+            },
+            {
+                "name": "BHARTIARTL",
+                "type": "SELL",
+                "amount": 2300.0,
+                "date": "Apr 23, 21:56",
+                "status": "success"
+            },
+            {
+                "name": "BHARTIARTL",
+                "type": "BUY",
+                "amount": 2300.0,
+                "date": "Apr 23, 21:56",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "DEPOSIT",
+                "amount": 5000.0,
+                "date": "Apr 23, 21:56",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "WITHDRAW",
+                "amount": 1000.0,
+                "date": "Apr 23, 20:44",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "DEPOSIT",
+                "amount": 150.0,
+                "date": "Apr 23, 20:43",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "DEPOSIT",
+                "amount": 1000.0,
+                "date": "Apr 23, 20:39",
+                "status": "success"
+            }
+        ]
+    },
+    "aparna": {
+        "cash_balance": 4300.0,
+        "portfolio_value": 0.0,
+        "holdings": {
+            "SBIN": 1
+        },
+        "history": [
+            {
+                "name": "BHARTIARTL",
+                "type": "SELL",
+                "amount": 1150.0,
+                "date": "Apr 23, 23:14",
+                "status": "success"
+            },
+            {
+                "name": "BHARTIARTL",
+                "type": "BUY",
+                "amount": 1150.0,
+                "date": "Apr 23, 23:13",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "WITHDRAW",
+                "amount": 50.0,
+                "date": "Apr 23, 23:13",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "DEPOSIT",
+                "amount": 100.0,
+                "date": "Apr 23, 23:12",
+                "status": "success"
+            },
+            {
+                "name": "SBIN",
+                "type": "SELL",
+                "amount": 3000.0,
+                "date": "Apr 23, 22:02",
+                "status": "success"
+            },
+            {
+                "name": "SBIN",
+                "type": "BUY",
+                "amount": 3750.0,
+                "date": "Apr 23, 22:01",
+                "status": "success"
+            },
+            {
+                "name": "WALLET",
+                "type": "DEPOSIT",
+                "amount": 5000.0,
+                "date": "Apr 23, 22:00",
+                "status": "success"
+            }
+        ]
+    }
+}
